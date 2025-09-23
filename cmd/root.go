@@ -18,7 +18,7 @@ var rootCmd = &cobra.Command{
 		if len(args) > 2 {
 			fmt.Printf("%s\n", "No more than two arguments are accepted per command.")
 		} else {
-			fmt.Println(handlers.NewTasks(12, args[1]))
+			fmt.Printf("The task with id %d create success\n", handlers.NewTasks(1, args[1]).ID)
 		}
 	},
 }
