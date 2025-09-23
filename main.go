@@ -1,7 +1,7 @@
 package main
 
-import "fmt"
+import "github.com/AppBlitz/task_tracker/cmd"
 
 func main() {
-	fmt.Println("Hello world")
+	cmd.Execute()
 }
