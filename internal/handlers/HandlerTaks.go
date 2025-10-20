@@ -1,3 +1,4 @@
+// Package handlers
 package handlers
 
 import (
@@ -20,4 +21,16 @@ func NewTasks(id int, description string) *model.Tasks {
 		UpdateAt:    time.Now(),
 		Status:      PROGRESSTASK,
 	}
+}
+
+func CreateTask() {
+	if VarificationDirectory() {
+	} else {
+	}
+}
+
+func ListAll() {
+}
+
+func DeleteTask(ID int) {
 }
