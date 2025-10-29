@@ -24,7 +24,7 @@ func NewTasks(id int, description string) *model.Tasks {
 }
 
 func CreateTask() {
-	if VarificationDirectory() {
+	if VerificationDirectory("task") {
 	} else {
 	}
 }
