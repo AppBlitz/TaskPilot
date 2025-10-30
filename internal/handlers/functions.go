@@ -20,7 +20,49 @@ func VerificationDirectory(directoryName string) bool {
 	return false
 }
 
-func returnId() {
+func ReturnID() int {
+	var auxiliaryTasks []*model.Tasks
+	var auxiliaryID int
+	value, erro := os.ReadFile(pathOfDirectory("task") + "/tasks.json")
+	if erro != nil {
+		panic(erro)
+	}
+	if len(value) > 0 {
+		erro = json.Unmarshal(value, &auxiliaryTasks)
+		for index, data := range auxiliaryTasks {
+			if index == len(auxiliaryTasks) {
+				auxiliaryID = data.ID
+			}
+		}
+		if erro != nil {
+			panic(erro)
+		}
+	}
+	return auxiliaryID + 1
+}
+
+func CreateTaks(description string) string {
+	file, erro := os.OpenFile("task/tasks.json", os.O_RDWR|os.O_APPEND, 0o0644)
+	if erro != nil {
+		panic(erro)
+	}
+	defer file.Close()
+	_, erro = CreateFile()
+	if erro != nil {
+		panic(erro)
+	}
+	var message string
+	task := NewTasks(ReturnID(), description)
+	data, erro := json.Marshal(task)
+	if erro != nil {
+		panic(erro)
+	}
+	_, erro = file.Write(data)
+	if erro != nil {
+		panic(erro)
+	}
+
+	return message
 }
 
 func ReturnDataFile() (value []*model.Tasks, erro error) {
@@ -28,9 +70,11 @@ func ReturnDataFile() (value []*model.Tasks, erro error) {
 	if erro != nil {
 		return value, erro
 	}
-	erro = json.Unmarshal(data, &value)
-	if erro != nil {
-		return value, erro
+	if len(value) > 0 {
+		erro = json.Unmarshal(data, &value)
+		if erro != nil {
+			return value, erro
+		}
 	}
 	return value, nil
 }

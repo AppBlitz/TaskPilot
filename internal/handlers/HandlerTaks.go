@@ -24,8 +24,8 @@ func NewTasks(id int, description string) *model.Tasks {
 	}
 }
 
-func CreateTask() string {
-	return "task create successfully"
+func CreateTask(description string) string {
+	return CreateTaks(description)
 }
 
 func ListAll() (value []byte, err error) {
