@@ -20,63 +20,42 @@ func VerificationDirectory(directoryName string) bool {
 	return false
 }
 
-func ReturnID() int {
+func ReturnID(aux []byte) int {
 	var auxiliaryTasks []*model.Tasks
-	var auxiliaryID int
-	value, erro := os.ReadFile(pathOfDirectory("task") + "/tasks.json")
-	if erro != nil {
-		panic(erro)
-	}
-	if len(value) > 0 {
-		erro = json.Unmarshal(value, &auxiliaryTasks)
-		for index, data := range auxiliaryTasks {
-			if index == len(auxiliaryTasks) {
-				auxiliaryID = data.ID
-			}
-		}
+	if len(aux) != 0 {
+		erro := json.Unmarshal(aux, &auxiliaryTasks)
 		if erro != nil {
 			panic(erro)
 		}
 	}
-	return auxiliaryID + 1
+	if len(auxiliaryTasks) == 0 {
+		return 1
+	}
+	return auxiliaryTasks[len(auxiliaryTasks)-1].ID + 1
 }
 
 func CreateTaks(description string) string {
-	file, erro := os.OpenFile("task/tasks.json", os.O_RDWR|os.O_APPEND, 0o0644)
-	if erro != nil {
-		panic(erro)
+	aux, _ := ReturnDataFile()
+	var auxiliaryTasks []*model.Tasks
+	if len(aux) != 0 {
+		erro := json.Unmarshal(aux, &auxiliaryTasks)
+		if erro != nil {
+			panic(erro)
+		}
 	}
-	defer file.Close()
-	_, erro = CreateFile()
+	_, erro := CreateFile()
 	if erro != nil {
 		panic(erro)
 	}
 	var message string
-	task := NewTasks(ReturnID(), description)
-	data, erro := json.Marshal(task)
-	if erro != nil {
-		panic(erro)
-	}
-	_, erro = file.Write(data)
-	if erro != nil {
-		panic(erro)
-	}
-
+	task := NewTasks(ReturnID(aux), description)
+	auxiliaryTasks = append(auxiliaryTasks, task)
+	addData(auxiliaryTasks)
 	return message
 }
 
-func ReturnDataFile() (value []*model.Tasks, erro error) {
-	data, erro := os.ReadFile(pathOfDirectory("task") + "/tasks.json")
-	if erro != nil {
-		return value, erro
-	}
-	if len(value) > 0 {
-		erro = json.Unmarshal(data, &value)
-		if erro != nil {
-			return value, erro
-		}
-	}
-	return value, nil
+func ReturnDataFile() (value []byte, erro error) {
+	return os.ReadFile(pathOfDirectory("task") + "/tasks.json")
 }
 
 func pathOfDirectory(nameDirectory string) (value string) {
@@ -108,17 +87,21 @@ func CreateDirectory(nameDirectory string) {
 }
 
 func DeleteTasks(ID int) (message string) {
-	data, erro := ReturnDataFile()
+	aux, _ := ReturnDataFile()
+	var data []*model.Tasks
 	var auxiliaryData []*model.Tasks
-	if erro != nil {
-		log.Fatal(erro)
+	if len(aux) != 0 {
+		erro := json.Unmarshal(aux, &data)
+		if erro != nil {
+			log.Fatal(erro)
+		}
 	}
 	for _, value := range data {
 		if value.ID != ID {
 			auxiliaryData = append(auxiliaryData, value)
 		}
 	}
-	erro = os.Remove(pathOfDirectory("task") + "/tasks.json")
+	erro := os.Remove(pathOfDirectory("task") + "/tasks.json")
 	verification, _ := CreateFile()
 	if erro == nil && verification {
 		if addData(auxiliaryData) {
@@ -133,16 +116,13 @@ func addData(data []*model.Tasks) bool {
 	if erro != nil {
 		panic("Error read file")
 	}
-	defer file.Close()
-	for _, value := range data {
-		valueByte, erro := json.Marshal(value)
-		if erro != nil {
-			panic("erro run loop")
-		}
-		_, erro = file.Write(valueByte)
-		if erro != nil {
-			panic("error add value")
-		}
+	valueByte, erro := json.Marshal(data)
+	if erro != nil {
+		panic(erro)
+	}
+	_, erro = file.Write(valueByte)
+	if erro != nil {
+		panic(erro)
 	}
 	return true
 }

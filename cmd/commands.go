@@ -16,7 +16,7 @@ var (
 		Aliases: []string{"a"},
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
-				panic("Arguments no ")
+				panic("Arguments no is valid")
 			}
 			if len(args) > 1 {
 				panic("")
@@ -46,6 +46,7 @@ var (
 	}
 	listAllTask = &cobra.Command{
 		Use:     "list",
+		Short:   "Show all tasks save",
 		Aliases: []string{"l"},
 		Run: func(cmd *cobra.Command, args []string) {
 			CreateResponseListTasks()
