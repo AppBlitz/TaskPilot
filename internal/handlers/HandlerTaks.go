@@ -2,6 +2,7 @@
 package handlers
 
 import (
+	"os"
 	"time"
 
 	"github.com/AppBlitz/task_tracker/internal/model"
@@ -23,14 +24,14 @@ func NewTasks(id int, description string) *model.Tasks {
 	}
 }
 
-func CreateTask() {
-	if VerificationDirectory("task") {
-	} else {
-	}
+func CreateTask() string {
+	return "task create successfully"
 }
 
-func ListAll() {
+func ListAll() (value []byte, err error) {
+	return os.ReadFile("task/tasks.json")
 }
 
-func DeleteTask(ID int) {
+func DeleteTask(ID int) string {
+	return DeleteTasks(ID)
 }

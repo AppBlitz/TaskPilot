@@ -3,6 +3,7 @@ package cmd
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/AppBlitz/task_tracker/internal/handlers"
 	"github.com/spf13/cobra"
@@ -23,7 +24,7 @@ var (
 		Use:     "delete",
 		Short:   "Delete a task for id",
 		Aliases: []string{"d"},
-		Example: "./Task-tracker {id}",
+		Example: "./Task-tracker [id]",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
 				fmt.Printf("%s\n", "Pleaso enter index")
@@ -34,13 +35,15 @@ var (
 			if VerificationNumber(args[0]) {
 				fmt.Printf("%s\n", "Index no is number, please verification")
 			}
+			value, _ := strconv.Atoi(args[0])
+			handlers.DeleteTask(value)
 		},
 	}
 	listAllTask = &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"l"},
 		Run: func(cmd *cobra.Command, args []string) {
-			handlers.ListAll()
+			CreateResponseListTasks()
 		},
 	}
 )
