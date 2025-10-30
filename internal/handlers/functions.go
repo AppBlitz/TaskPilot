@@ -20,8 +20,11 @@ func VerificationDirectory(directoryName string) bool {
 	return false
 }
 
+func returnId() {
+}
+
 func ReturnDataFile() (value []*model.Tasks, erro error) {
-	data, erro := os.ReadFile(pathOfDirectory("taks") + "/tasks.json")
+	data, erro := os.ReadFile(pathOfDirectory("task") + "/tasks.json")
 	if erro != nil {
 		return value, erro
 	}
