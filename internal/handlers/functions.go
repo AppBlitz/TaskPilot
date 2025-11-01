@@ -34,7 +34,7 @@ func ReturnID(aux []byte) int {
 	return auxiliaryTasks[len(auxiliaryTasks)-1].ID + 1
 }
 
-func CreateTaks(description string) string {
+func CreateTaks(description string) int {
 	aux, _ := ReturnDataFile()
 	var auxiliaryTasks []*model.Tasks
 	if len(aux) != 0 {
@@ -47,11 +47,10 @@ func CreateTaks(description string) string {
 	if erro != nil {
 		panic(erro)
 	}
-	var message string
 	task := NewTasks(ReturnID(aux), description)
 	auxiliaryTasks = append(auxiliaryTasks, task)
 	addData(auxiliaryTasks)
-	return message
+	return task.ID
 }
 
 func ReturnDataFile() (value []byte, erro error) {
@@ -125,4 +124,35 @@ func addData(data []*model.Tasks) bool {
 		panic(erro)
 	}
 	return true
+}
+
+func UpdateTask(ID int, description string) bool {
+	var datas []*model.Tasks
+	var da []*model.Tasks
+	auxData, _ := ReturnDataFile()
+	erro := json.Unmarshal(auxData, &datas)
+	if erro != nil {
+		return false
+	}
+	task := SearchTaksForID(datas, ID)
+	for _, value := range datas {
+		if value.ID != task.ID {
+			da = append(da, value)
+		}
+		task.Description = description
+	}
+	os.Remove("task/tasks.json")
+	CreateFile()
+	addData(append(da, task))
+	return true
+}
+
+func SearchTaksForID(auxiliaryTask []*model.Tasks, ID int) *model.Tasks {
+	var taskFound *model.Tasks
+	for _, value := range auxiliaryTask {
+		if value.ID == ID {
+			taskFound = value
+		}
+	}
+	return taskFound
 }

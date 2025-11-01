@@ -3,13 +3,14 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/AppBlitz/task_tracker/internal/handlers"
 	"github.com/spf13/cobra"
 )
 
 var (
-	versionCmd = &cobra.Command{
+	commandAdd = &cobra.Command{
 		Use:     "add",
 		Short:   "Create new task",
 		Example: "./Task-Tracker add [nameTaks]",
@@ -52,10 +53,26 @@ var (
 			CreateResponseListTasks()
 		},
 	}
+	updateTask = &cobra.Command{
+		Use: "update",
+		Run: func(cmd *cobra.Command, args []string) {
+			number := VerificationNumber(args[0])
+			if len(args) < 2 {
+				log.Fatal("arguments no ")
+			}
+			if len(args) > 2 {
+				log.Fatal("")
+			}
+			if number > 0 {
+				handlers.UpdateTaks(number, args[1])
+			}
+		},
+	}
 )
 
 func init() {
-	rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(commandAdd)
 	rootCmd.AddCommand(deleteTask)
 	rootCmd.AddCommand(listAllTask)
+	rootCmd.AddCommand(updateTask)
 }

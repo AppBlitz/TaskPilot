@@ -3,6 +3,7 @@ package handlers
 
 import (
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/AppBlitz/task_tracker/internal/model"
@@ -25,7 +26,9 @@ func NewTasks(id int, description string) *model.Tasks {
 }
 
 func CreateTask(description string) string {
-	return CreateTaks(description)
+	idTaskCreate := CreateTaks(description)
+	message := "Task added successfully" + "(ID:" + strconv.Itoa(idTaskCreate) + ")"
+	return message
 }
 
 func ListAll() (value []byte, err error) {
@@ -34,4 +37,12 @@ func ListAll() (value []byte, err error) {
 
 func DeleteTask(ID int) string {
 	return DeleteTasks(ID)
+}
+
+func UpdateTaks(ID int, description string) string {
+	message := "Task update successfully with" + "(ID:" + strconv.Itoa(ID) + ")"
+	if !UpdateTask(ID, description) {
+		message = "Task no update with succesfully"
+	}
+	return message
 }
