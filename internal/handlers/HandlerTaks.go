@@ -22,7 +22,7 @@ func NewTasks(id int, description string) *model.Tasks {
 		Description: description,
 		CreateAt:    time.Now(),
 		UpdateAt:    time.Now(),
-		Status:      PROGRESSTASK,
+		Status:      STATUTODO,
 	}
 }
 
