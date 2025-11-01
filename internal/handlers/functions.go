@@ -156,3 +156,26 @@ func SearchTaksForID(auxiliaryTask []*model.Tasks, ID int) *model.Tasks {
 	}
 	return taskFound
 }
+
+func SearchForState(state string) []*model.Tasks {
+	var auxilairyData []*model.Tasks
+	var auxilairyDatas []*model.Tasks
+	data, erro := ReturnDataFile()
+	if erro != nil {
+		panic("erro read file")
+	}
+	erro = json.Unmarshal(data, &auxilairyDatas)
+	if erro != nil {
+		panic("Error converter value")
+	}
+	for _, value := range auxilairyDatas {
+		if verificationState(model.StatusTaks(state), value) {
+			auxilairyData = append(auxilairyData, value)
+		}
+	}
+	return auxilairyData
+}
+
+func verificationState(state model.StatusTaks, taskVerification *model.Tasks) bool {
+	return state == taskVerification.Status
+}

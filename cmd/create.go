@@ -8,8 +8,8 @@ import (
 	"github.com/AppBlitz/task_tracker/internal/handlers"
 )
 
-func CreateResponseListTasks() {
-	data, error := handlers.ListAll()
+func CreateResponseListTasks(args []string) {
+	data, error := handlers.ListAll(args)
 	if error != nil {
 		log.Fatal(error)
 	}

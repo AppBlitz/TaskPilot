@@ -50,7 +50,7 @@ var (
 		Short:   "Show all tasks save",
 		Aliases: []string{"l"},
 		Run: func(cmd *cobra.Command, args []string) {
-			CreateResponseListTasks()
+			CreateResponseListTasks(args)
 		},
 	}
 	updateTask = &cobra.Command{

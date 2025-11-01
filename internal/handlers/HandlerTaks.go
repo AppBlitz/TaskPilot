@@ -2,6 +2,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"os"
 	"strconv"
 	"time"
@@ -31,7 +32,11 @@ func CreateTask(description string) string {
 	return message
 }
 
-func ListAll() (value []byte, err error) {
+func ListAll(args []string) (value []byte, err error) {
+	if len(args) > 0 {
+		data := SearchForState(args[0])
+		return json.Marshal(data)
+	}
 	return os.ReadFile("task/tasks.json")
 }
 
