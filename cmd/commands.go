@@ -13,7 +13,7 @@ var (
 	commandAdd = &cobra.Command{
 		Use:     "add",
 		Short:   "Create new task",
-		Example: "./Task-Tracker add [nameTaks]",
+		Example: "./task-cli add [description task]",
 		Aliases: []string{"a"},
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
@@ -30,7 +30,7 @@ var (
 		Use:     "delete",
 		Short:   "Delete a task for id",
 		Aliases: []string{"d"},
-		Example: "./Task-tracker [id]",
+		Example: "./task-cli [id]",
 		Run: func(cmd *cobra.Command, args []string) {
 			number := VerificationNumber(args[0])
 			if len(args) == 0 {
@@ -49,6 +49,7 @@ var (
 		Use:     "list",
 		Short:   "Show all tasks save",
 		Aliases: []string{"l"},
+		Example: "./task-cli list",
 		Run: func(cmd *cobra.Command, args []string) {
 			CreateResponseListTasks(args)
 		},
