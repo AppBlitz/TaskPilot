@@ -5,7 +5,7 @@ Tasks are saved in a json file on the computer where they are executed.
 
 # Challenge credits
 
-[visit challenge](roadmap.sh/projects/task-tracker)
+[visit challenge](https://roadmap.sh/)
 
 # How build 
 
