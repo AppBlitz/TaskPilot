@@ -49,8 +49,7 @@ func CreateTaks(description string) int {
 		panic(erro)
 	}
 	task := NewTasks(ReturnID(aux), description)
-	auxiliaryTasks = append(auxiliaryTasks, task)
-	addData(auxiliaryTasks)
+	addData(orderTask(append(auxiliaryTasks, task)))
 	return task.ID
 }
 
@@ -144,7 +143,7 @@ func UpdateTask(ID int, description string) bool {
 		task.UpdateAt = time.Now()
 	}
 	deleteFile()
-	addData(append(da, task))
+	addData(orderTask(append(da, task)))
 	return true
 }
 
@@ -211,7 +210,7 @@ func MarkDones(ID int) {
 		task.UpdateAt = time.Now()
 		task.Status = COMPLETETASK
 		deleteFile()
-		addData(append(datas, task))
+		addData(orderTask(append(datas, task)))
 	}
 }
 
@@ -237,4 +236,17 @@ func MarkInProgress(ID int) {
 	task.Status = PROGRESSTASK
 	deleteFile()
 	addData(append(auxiliaryTask, task))
+}
+
+func orderTask(tasks []*model.Tasks) []*model.Tasks {
+	for i := range tasks {
+		for j := i + 1; j < len(tasks); j += 1 {
+			if tasks[i].ID > tasks[j].ID {
+				auxiliary := tasks[j]
+				tasks[j] = tasks[i]
+				tasks[i] = auxiliary
+			}
+		}
+	}
+	return tasks
 }
