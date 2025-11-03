@@ -209,8 +209,32 @@ func MarkDones(ID int) {
 			datas = append(datas, value)
 		}
 		task.UpdateAt = time.Now()
-		task.Status = "done"
+		task.Status = COMPLETETASK
 		deleteFile()
 		addData(append(datas, task))
 	}
+}
+
+func MarkInProgress(ID int) {
+	var auxiliaryTask []*model.Tasks
+	var datas []*model.Tasks
+	data, erro := ReturnDataFile()
+	if erro != nil {
+		panic("erro read file")
+	}
+	erro = json.Unmarshal(data, &datas)
+	if erro != nil {
+		panic(erro)
+	}
+
+	task := SearchTaksForID(datas, ID)
+	for _, value := range datas {
+		if value.ID != task.ID {
+			auxiliaryTask = append(auxiliaryTask, value)
+		}
+	}
+	task.UpdateAt = time.Now()
+	task.Status = PROGRESSTASK
+	deleteFile()
+	addData(append(auxiliaryTask, task))
 }

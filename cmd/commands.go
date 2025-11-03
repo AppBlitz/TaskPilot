@@ -68,7 +68,7 @@ var (
 			}
 		},
 	}
-	markdone = &cobra.Command{
+	markDone = &cobra.Command{
 		Use:     "mark-done",
 		Example: "/task-cli mark-done [id task]",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -83,6 +83,21 @@ var (
 			handlers.MarkDone(number)
 		},
 	}
+	markProgress = &cobra.Command{
+		Use:     "mark-in-progress",
+		Example: "./task-cli mark-in-progress [id task]",
+		Run: func(cmd *cobra.Command, args []string) {
+			number := VerificationNumber(args[0])
+			length := len(args)
+			if length < 0 || length > 2 {
+				log.Fatal("amount arguments no valid")
+			}
+			if number < 0 {
+				log.Fatal("ID negative, have positive")
+			}
+			handlers.MarkProgress(number)
+		},
+	}
 )
 
 func init() {
@@ -90,5 +105,6 @@ func init() {
 	rootCmd.AddCommand(deleteTask)
 	rootCmd.AddCommand(listAllTask)
 	rootCmd.AddCommand(updateTask)
-	rootCmd.AddCommand(markdone)
+	rootCmd.AddCommand(markDone)
+	rootCmd.AddCommand(markProgress)
 }

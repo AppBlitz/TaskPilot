@@ -55,3 +55,7 @@ func UpdateTaks(ID int, description string) string {
 func MarkDone(ID int) {
 	MarkDones(ID)
 }
+
+func MarkProgress(ID int) {
+	MarkInProgress(ID)
+}
