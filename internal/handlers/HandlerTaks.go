@@ -51,3 +51,7 @@ func UpdateTaks(ID int, description string) string {
 	}
 	return message
 }
+
+func MarkDone(ID int) {
+	MarkDones(ID)
+}

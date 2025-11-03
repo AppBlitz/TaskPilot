@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/AppBlitz/task_tracker/internal/model"
 )
@@ -140,11 +141,22 @@ func UpdateTask(ID int, description string) bool {
 			da = append(da, value)
 		}
 		task.Description = description
+		task.UpdateAt = time.Now()
 	}
-	os.Remove("task/tasks.json")
-	CreateFile()
+	deleteFile()
 	addData(append(da, task))
 	return true
+}
+
+func deleteFile() {
+	erro := os.Remove("task/tasks.json")
+	if erro != nil {
+		panic("Erro delete file")
+	}
+	_, erro = CreateFile()
+	if erro != nil {
+		panic("Erro create file")
+	}
 }
 
 func SearchTaksForID(auxiliaryTask []*model.Tasks, ID int) *model.Tasks {
@@ -178,4 +190,27 @@ func SearchForState(state string) []*model.Tasks {
 
 func verificationState(state model.StatusTaks, taskVerification *model.Tasks) bool {
 	return state == taskVerification.Status
+}
+
+func MarkDones(ID int) {
+	var auxiliaryTask []*model.Tasks
+	var datas []*model.Tasks
+	data, erro := ReturnDataFile()
+	if erro != nil {
+		panic(erro)
+	}
+	erro = json.Unmarshal(data, &auxiliaryTask)
+	if erro != nil {
+		panic(erro)
+	}
+	task := SearchTaksForID(auxiliaryTask, ID)
+	for _, value := range auxiliaryTask {
+		if value.ID != task.ID {
+			datas = append(datas, value)
+		}
+		task.UpdateAt = time.Now()
+		task.Status = "done"
+		deleteFile()
+		addData(append(datas, task))
+	}
 }

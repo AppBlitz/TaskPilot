@@ -68,6 +68,21 @@ var (
 			}
 		},
 	}
+	markdone = &cobra.Command{
+		Use:     "mark-done",
+		Example: "/task-cli mark-done [id task]",
+		Run: func(cmd *cobra.Command, args []string) {
+			number := VerificationNumber(args[0])
+			length := len(args)
+			if length > 2 || length < 0 {
+				log.Fatal("count options no valid")
+			}
+			if number < 0 {
+				log.Fatal("ID no valid")
+			}
+			handlers.MarkDone(number)
+		},
+	}
 )
 
 func init() {
@@ -75,4 +90,5 @@ func init() {
 	rootCmd.AddCommand(deleteTask)
 	rootCmd.AddCommand(listAllTask)
 	rootCmd.AddCommand(updateTask)
+	rootCmd.AddCommand(markdone)
 }
