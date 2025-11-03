@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
 	"os"
 	"strconv"
 	"time"
@@ -49,27 +48,34 @@ func CreateTaks(description string) int {
 		panic(erro)
 	}
 	task := NewTasks(ReturnID(aux), description)
+
 	addData(orderTask(append(auxiliaryTasks, task)))
 	return task.ID
 }
 
 func ReturnDataFile() (value []byte, erro error) {
-	return os.ReadFile(pathOfDirectory("task") + "/tasks.json")
+	var auxiliary []byte
+	response, erro := pathOfDirectory("task")
+	if erro != nil {
+		return auxiliary, erro
+	}
+	return os.ReadFile(response + "/tasks.json")
 }
 
-func pathOfDirectory(nameDirectory string) (value string) {
+func pathOfDirectory(nameDirectory string) (value string, erro error) {
 	pathDirectory, erro := os.Getwd()
 	if erro != nil {
-		return ""
+		return "", erro
 	}
-	return pathDirectory + "/" + nameDirectory
+	return pathDirectory + "/" + nameDirectory, nil
 }
 
 func CreateFile() (value bool, err error) {
 	if !VerificationDirectory("task") {
 		CreateDirectory("task")
 	}
-	_, erro := os.Create(pathOfDirectory("task") + "/tasks.json")
+	response, erro := pathOfDirectory("task")
+	_, erro = os.Create(response + "/tasks.json")
 	if erro != nil {
 		return false, erro
 	}
@@ -77,22 +83,26 @@ func CreateFile() (value bool, err error) {
 }
 
 // CreateDirectory implements creation directory if no exist
-func CreateDirectory(nameDirectory string) {
+func CreateDirectory(nameDirectory string) error {
 	pathAbsolute, _ := os.Getwd()
-	err := os.Mkdir(pathAbsolute+"/"+nameDirectory, 0o777)
-	if err != nil {
-		panic(err)
+	erro := os.Mkdir(pathAbsolute+"/"+nameDirectory, 0o777)
+	if erro != nil {
+		return erro
 	}
+	return nil
 }
 
-func DeleteTasks(ID int) (message string) {
-	aux, _ := ReturnDataFile()
+func DeleteTasks(ID int) (message string, erro error) {
+	aux, erro := ReturnDataFile()
+	if erro != nil {
+		return "", erro
+	}
 	var data []*model.Tasks
 	var auxiliaryData []*model.Tasks
 	if len(aux) != 0 {
 		erro := json.Unmarshal(aux, &data)
 		if erro != nil {
-			log.Fatal(erro)
+			return "", erro
 		}
 	}
 	for _, value := range data {
@@ -100,30 +110,34 @@ func DeleteTasks(ID int) (message string) {
 			auxiliaryData = append(auxiliaryData, value)
 		}
 	}
-	erro := os.Remove(pathOfDirectory("task") + "/tasks.json")
-	verification, _ := CreateFile()
-	if erro == nil && verification {
-		if addData(auxiliaryData) {
-			message = "task delete succesfully" + strconv.Itoa(ID)
-		}
+	deleteFile()
+	erro = addData(auxiliaryData)
+	if erro != nil {
+		return "", erro
 	}
-	return message
+	message = "task delete succesfully" + strconv.Itoa(ID)
+
+	return message, nil
 }
 
-func addData(data []*model.Tasks) bool {
-	file, erro := os.OpenFile(pathOfDirectory("task")+"/tasks.json", os.O_APPEND|os.O_RDWR, 0o0644)
+func addData(data []*model.Tasks) (erro error) {
+	response, erro := pathOfDirectory("task")
 	if erro != nil {
-		panic("Error read file")
+		return erro
+	}
+	file, erro := os.OpenFile(response+"/tasks.json", os.O_APPEND|os.O_RDWR, 0o0644)
+	if erro != nil {
+		return erro
 	}
 	valueByte, erro := json.Marshal(data)
 	if erro != nil {
-		panic(erro)
+		return erro
 	}
 	_, erro = file.Write(valueByte)
 	if erro != nil {
-		panic(erro)
+		return erro
 	}
-	return true
+	return nil
 }
 
 func UpdateTask(ID int, description string) bool {

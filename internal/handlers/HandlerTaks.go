@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/AppBlitz/task_tracker/internal/handlers"
 	"github.com/AppBlitz/task_tracker/internal/model"
 )
 
@@ -40,8 +41,12 @@ func ListAll(args []string) (value []byte, err error) {
 	return os.ReadFile("task/tasks.json")
 }
 
-func DeleteTask(ID int) string {
-	return DeleteTasks(ID)
+func DeleteTask(ID int) (message string, erro error) {
+	message, erro = handlers.DeleteTasks(ID)
+	if erro != nil {
+		return "", erro
+	}
+	return message, nil
 }
 
 func UpdateTaks(ID int, description string) string {
