@@ -38,7 +38,7 @@ func CreateTaks(description string) (response int, erro error) {
 	aux, _ := ReturnDataFile()
 	var auxiliaryTasks []*model.Tasks
 	if len(aux) != 0 {
-		erro := json.Unmarshal(aux, &auxiliaryTasks)
+		erro = json.Unmarshal(aux, &auxiliaryTasks)
 		if erro != nil {
 			panic(erro)
 		}
@@ -74,12 +74,18 @@ func pathOfDirectory(nameDirectory string) (value string, erro error) {
 
 func CreateFile() (value bool, err error) {
 	if !VerificationDirectory("task") {
-		CreateDirectory("task")
+		err = CreateDirectory("task")
+		if err != nil {
+			return false, err
+		}
 	}
-	response, erro := pathOfDirectory("task")
-	_, erro = os.Create(response + "/tasks.json")
-	if erro != nil {
-		return false, erro
+	response, err := pathOfDirectory("task")
+	if err != nil {
+		return false, nil
+	}
+	_, err = os.Create(response + "/tasks.json")
+	if err != nil {
+		return false, err
 	}
 	return true, nil
 }
@@ -160,7 +166,10 @@ func UpdateTask(ID int, description string) (erro error) {
 		task.Description = description
 		task.UpdateAt = time.Now()
 	}
-	deleteFile()
+	erro = deleteFile()
+	if erro != nil {
+		return erro
+	}
 	erro = addData(orderTask(append(da, task)))
 	if erro != nil {
 		return erro
@@ -231,8 +240,14 @@ func MarkDones(ID int) {
 		}
 		task.UpdateAt = time.Now()
 		task.Status = COMPLETETASK
-		deleteFile()
-		addData(orderTask(append(datas, task)))
+		erro = deleteFile()
+		if erro != nil {
+			panic(erro)
+		}
+		erro = addData(orderTask(append(datas, task)))
+		if erro != nil {
+			panic(erro)
+		}
 	}
 }
 
@@ -256,8 +271,14 @@ func MarkInProgress(ID int) {
 	}
 	task.UpdateAt = time.Now()
 	task.Status = PROGRESSTASK
-	deleteFile()
-	addData(append(auxiliaryTask, task))
+	erro = deleteFile()
+	if erro != nil {
+		panic(erro)
+	}
+	erro = addData(orderTask(append(auxiliaryTask, task)))
+	if erro != nil {
+		panic(erro)
+	}
 }
 
 func orderTask(tasks []*model.Tasks) []*model.Tasks {
