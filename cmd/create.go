@@ -21,10 +21,10 @@ func CreateResponseListTasks(args []string) {
 }
 
 func separateForState(value []byte) (l *list.List, erro error) {
-	var auxiliary []*model.Tasks
-	var todo []*model.Tasks
-	var progress []*model.Tasks
-	var done []*model.Tasks
+	var auxiliary []model.Tasks
+	var todo []byte
+	var progress []byte
+	var done []byte
 	erro = json.Unmarshal(value, &auxiliary)
 	if erro != nil {
 		return nil, erro
@@ -32,19 +32,25 @@ func separateForState(value []byte) (l *list.List, erro error) {
 	for _, data := range auxiliary {
 		switch data.Status {
 		case handlers.COMPLETETASK:
-			done = append(done, data)
+			done = append(done, converByte(data)...)
 		case handlers.PROGRESSTASK:
-			progress = append(progress, data)
+			progress = append(progress, converByte(data)...)
 		default:
-			todo = append(todo, data)
+			todo = append(todo, converByte(data)...)
 		}
 	}
-	l = list.New(
-		"todo", list.New(todo),
-		"done", list.New(done),
-		"in-progress", list.New(progress),
+	response := list.New(
+		"todo", list.New(string(todo)),
+		"done", list.New(string(done)),
+		"in-progress", list.New(string(progress)),
 	)
-	return l, nil
+
+	return response, nil
+}
+
+func converByte(tasks model.Tasks) []byte {
+	value, _ := json.Marshal(tasks)
+	return value
 }
 
 func VerificationNumber(number string) int {
