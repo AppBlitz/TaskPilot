@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/AppBlitz/task_tracker/internal/handlers"
 	"github.com/AppBlitz/task_tracker/internal/model"
 )
 
@@ -28,7 +27,10 @@ func NewTasks(id int, description string) *model.Tasks {
 }
 
 func CreateTask(description string) string {
-	idTaskCreate := CreateTaks(description)
+	idTaskCreate, erro := CreateTaks(description)
+	if erro != nil {
+		return ""
+	}
 	message := "Task added successfully" + "(ID:" + strconv.Itoa(idTaskCreate) + ")"
 	return message
 }
@@ -42,19 +44,20 @@ func ListAll(args []string) (value []byte, err error) {
 }
 
 func DeleteTask(ID int) (message string, erro error) {
-	message, erro = handlers.DeleteTasks(ID)
+	message, erro = DeleteTasks(ID)
 	if erro != nil {
 		return "", erro
 	}
 	return message, nil
 }
 
-func UpdateTaks(ID int, description string) string {
-	message := "Task update successfully with" + "(ID:" + strconv.Itoa(ID) + ")"
-	if !UpdateTask(ID, description) {
-		message = "Task no update with succesfully"
+func UpdateTaks(ID int, description string) (message string, erro error) {
+	message = "Task update successfully with" + "(ID:" + strconv.Itoa(ID) + ")"
+	erro = UpdateTask(ID, description)
+	if erro != nil {
+		return "", erro
 	}
-	return message
+	return message, nil
 }
 
 func MarkDone(ID int) {

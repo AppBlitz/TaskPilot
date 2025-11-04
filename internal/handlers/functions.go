@@ -34,7 +34,7 @@ func ReturnID(aux []byte) int {
 	return auxiliaryTasks[len(auxiliaryTasks)-1].ID + 1
 }
 
-func CreateTaks(description string) int {
+func CreateTaks(description string) (response int, erro error) {
 	aux, _ := ReturnDataFile()
 	var auxiliaryTasks []*model.Tasks
 	if len(aux) != 0 {
@@ -43,14 +43,16 @@ func CreateTaks(description string) int {
 			panic(erro)
 		}
 	}
-	_, erro := CreateFile()
+	_, erro = CreateFile()
 	if erro != nil {
-		panic(erro)
+		return -1, erro
 	}
 	task := NewTasks(ReturnID(aux), description)
-
-	addData(orderTask(append(auxiliaryTasks, task)))
-	return task.ID
+	erro = addData(orderTask(append(auxiliaryTasks, task)))
+	if erro != nil {
+		return -1, nil
+	}
+	return task.ID, nil
 }
 
 func ReturnDataFile() (value []byte, erro error) {
@@ -100,7 +102,7 @@ func DeleteTasks(ID int) (message string, erro error) {
 	var data []*model.Tasks
 	var auxiliaryData []*model.Tasks
 	if len(aux) != 0 {
-		erro := json.Unmarshal(aux, &data)
+		erro = json.Unmarshal(aux, &data)
 		if erro != nil {
 			return "", erro
 		}
@@ -140,13 +142,13 @@ func addData(data []*model.Tasks) (erro error) {
 	return nil
 }
 
-func UpdateTask(ID int, description string) bool {
+func UpdateTask(ID int, description string) (erro error) {
 	var datas []*model.Tasks
 	var da []*model.Tasks
 	auxData, _ := ReturnDataFile()
-	erro := json.Unmarshal(auxData, &datas)
+	erro = json.Unmarshal(auxData, &datas)
 	if erro != nil {
-		return false
+		return erro
 	}
 	task := SearchTaksForID(datas, ID)
 	for _, value := range datas {
@@ -157,19 +159,23 @@ func UpdateTask(ID int, description string) bool {
 		task.UpdateAt = time.Now()
 	}
 	deleteFile()
-	addData(orderTask(append(da, task)))
-	return true
+	erro = addData(orderTask(append(da, task)))
+	if erro != nil {
+		return erro
+	}
+	return nil
 }
 
-func deleteFile() {
-	erro := os.Remove("task/tasks.json")
+func deleteFile() (erro error) {
+	erro = os.Remove("task/tasks.json")
 	if erro != nil {
-		panic("Erro delete file")
+		return erro
 	}
 	_, erro = CreateFile()
 	if erro != nil {
-		panic("Erro create file")
+		return erro
 	}
+	return nil
 }
 
 func SearchTaksForID(auxiliaryTask []*model.Tasks, ID int) *model.Tasks {

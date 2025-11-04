@@ -42,7 +42,11 @@ var (
 			if number < 0 {
 				fmt.Printf("%s\n", " id of task no acepted, please verification")
 			}
-			handlers.DeleteTask(number)
+			message, erro := handlers.DeleteTask(number)
+			if erro != nil {
+				log.Fatal(erro)
+			}
+			fmt.Printf("%s", message)
 		},
 	}
 	listAllTask = &cobra.Command{
@@ -65,7 +69,12 @@ var (
 				log.Fatal("")
 			}
 			if number > 0 {
-				handlers.UpdateTaks(number, args[1])
+				message, erro := handlers.UpdateTaks(number, args[1])
+				if erro != nil {
+					log.Fatal(erro)
+				} else {
+					fmt.Printf("%s", message)
+				}
 			}
 		},
 	}
