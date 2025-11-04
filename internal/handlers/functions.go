@@ -112,13 +112,15 @@ func DeleteTasks(ID int) (message string, erro error) {
 			auxiliaryData = append(auxiliaryData, value)
 		}
 	}
-	deleteFile()
+	erro = deleteFile()
+	if erro != nil {
+		return "", erro
+	}
 	erro = addData(auxiliaryData)
 	if erro != nil {
 		return "", erro
 	}
 	message = "task delete succesfully" + strconv.Itoa(ID)
-
 	return message, nil
 }
 
