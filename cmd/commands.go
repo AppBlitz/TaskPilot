@@ -16,11 +16,12 @@ var (
 		Example: "./task-cli add [description task]",
 		Aliases: []string{"a"},
 		Run: func(cmd *cobra.Command, args []string) {
+			log := log.Fatal
 			if len(args) == 0 {
-				panic("Arguments no is valid")
+				log("Arguments no is valid")
 			}
 			if len(args) > 1 {
-				panic("")
+				log("Amount arguments no valid")
 			}
 			fmt.Printf("%v\n", handlers.CreateTask(args[0]))
 		},
@@ -33,18 +34,19 @@ var (
 		Example: "./task-cli [id]",
 		Run: func(cmd *cobra.Command, args []string) {
 			number := VerificationNumber(args[0])
+			log := log.Fatal
 			if len(args) == 0 {
-				panic("Pleaso enter index")
+				log("Pleaso enter index")
 			}
 			if len(args) > 1 {
-				panic("count of parameter no valid")
+				log("count of parameter no valid")
 			}
 			if number < 0 {
 				fmt.Printf("%s\n", " id of task no acepted, please verification")
 			}
 			message, erro := handlers.DeleteTask(number)
 			if erro != nil {
-				log.Fatal(erro)
+				log(erro)
 			}
 			fmt.Printf("%s", message)
 		},
@@ -62,16 +64,17 @@ var (
 		Use: "update",
 		Run: func(cmd *cobra.Command, args []string) {
 			number := VerificationNumber(args[0])
+			log := log.Fatal
 			if len(args) < 2 {
-				log.Fatal("arguments no ")
+				log("arguments no ")
 			}
 			if len(args) > 2 {
-				log.Fatal("")
+				log("")
 			}
 			if number > 0 {
 				message, erro := handlers.UpdateTaks(number, args[1])
 				if erro != nil {
-					log.Fatal(erro)
+					log(erro)
 				} else {
 					fmt.Printf("%s", message)
 				}
@@ -83,12 +86,13 @@ var (
 		Example: "/task-cli mark-done [id task]",
 		Run: func(cmd *cobra.Command, args []string) {
 			number := VerificationNumber(args[0])
+			log := log.Fatal
 			length := len(args)
 			if length > 2 || length < 0 {
-				log.Fatal("count options no valid")
+				log("count options no valid")
 			}
 			if number < 0 {
-				log.Fatal("ID no valid")
+				log("ID no valid")
 			}
 			handlers.MarkDone(number)
 		},
@@ -99,11 +103,12 @@ var (
 		Run: func(cmd *cobra.Command, args []string) {
 			number := VerificationNumber(args[0])
 			length := len(args)
+			log := log.Fatal
 			if length < 0 || length > 2 {
-				log.Fatal("amount arguments no valid")
+				log("amount arguments no valid")
 			}
 			if number < 0 {
-				log.Fatal("ID negative, have positive")
+				log("ID negative, have positive")
 			}
 			handlers.MarkProgress(number)
 		},
