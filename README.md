@@ -16,33 +16,34 @@ Clone the repository and run the following command:
 ```git
 https://github.com/AppBlitz/TaskPilot.git
 cd TaskPilot
+
 ```
 
 
 Run the following command to build and run the project:
 
 ```bash
-go build -o task-tracker
-./task-tracker --help # To see the list of available commands
+go build -o task-cli
+./task-cli --help # To see the list of available commands
 
 # To add a task
-./task-tracker add "Buy groceries"
+./task-cli add "Buy groceries"
 
 # To update a task
-./task-tracker update 1 "Buy groceries and cook dinner"
+./task-cli update 1 "Buy groceries and cook dinner"
 
 # To delete a task
-./task-tracker delete 1
+./task-cli delete 1
 
 # To mark a task as in progress/done/todo
-./task-tracker mark-in-progress 1
-./task-tracker mark-done 1
+./task-cli mark-in-progress 1
+./task-cli mark-done 1
 
 # To list all tasks
-./task-tracker list
-./task-tracker list done
-./task-tracker list todo
-./task-tracker list in-progress
+./task-cli list
+./task-cli list done
+./task-cli list todo
+./task-cli list in-progress
 ```
 
 
