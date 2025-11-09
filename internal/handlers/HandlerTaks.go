@@ -60,8 +60,8 @@ func UpdateTaks(ID int, description string) (message string, erro error) {
 	return message, nil
 }
 
-func MarkDone(ID int) {
-	MarkDones(ID)
+func MarkDone(ID int) error {
+	return MarkDones(ID)
 }
 
 func MarkProgress(ID int) {

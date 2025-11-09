@@ -1,11 +1,13 @@
+
+# Task tracker 
+
+Sample solution for the [task-tracker](https://roadmap.sh/projects/task-tracker) challenge from [roadmap.sh](https://roadmap.sh/).
+
 # Task Pilot
 
 It is an application that creates tasks using command lines, where the main features are the ability to update, create, and delete the different task lists you have.
 Tasks are saved in a json file on the computer where they are executed.
 
-# Challenge credits
-
-[visit challenge](https://roadmap.sh/)
 
 # How build 
 

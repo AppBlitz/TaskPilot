@@ -13,7 +13,8 @@ func CreateResponseListTasks(args []string) {
 	if error != nil {
 		log.Fatal(error)
 	}
-	fmt.Println(handlers.Style.Render(string(data)))
+	style := []string{"#6A5ACD", "#1A1A1A", "#CC99FF"}
+	fmt.Println(handlers.Styles("list all tasks", style).Render(string(data)))
 }
 
 func VerificationNumber(number string) int {
@@ -22,4 +23,10 @@ func VerificationNumber(number string) int {
 		return -1
 	}
 	return value
+}
+
+func CommandCreateTasks(description string) {
+	style := []string{"#ccff99", "#cc99ff", "#cccc66"}
+	message := handlers.CreateTask(description)
+	fmt.Println(handlers.Styles("", style).Render(message))
 }

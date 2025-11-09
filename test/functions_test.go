@@ -23,7 +23,7 @@ func TestReturnDataFile(t *testing.T) {
 	}
 }
 
-func TestSearchTaskForId(t *testing.T) {
+func TestSearchTaskForID(t *testing.T) {
 	value, erro := handlers.ReturnDataFile()
 	var auxiliar []*model.Tasks
 	if erro != nil {
@@ -33,7 +33,6 @@ func TestSearchTaskForId(t *testing.T) {
 	if erro != nil {
 		t.Errorf("%s %s", "file parser erro", "file save task is empty")
 	}
-	handlers.SearchTaksForID(auxiliar, 2)
 }
 
 func TestCreateTask(t *testing.T) {
@@ -41,5 +40,33 @@ func TestCreateTask(t *testing.T) {
 	task := handlers.CreateTask(description)
 	if task == "" {
 		t.Errorf("%s", "Handler no create with succesfull")
+	}
+}
+
+func TestMarkDone(t *testing.T) {
+	erro := handlers.MarkDone(2)
+	if erro != nil {
+		t.Errorf("%s", "error in update task to done")
+	}
+}
+
+func TestMakProgress(t *testing.T) {
+	erro := handlers.MarkInProgress(2)
+	if erro != nil {
+		t.Errorf("%s", "error in update task to progress")
+	}
+}
+
+func TestUpdateTask(t *testing.T) {
+	_, erro := handlers.UpdateTaks(1, "task modification test")
+	if erro != nil {
+		t.Errorf("%s", "Error in update task")
+	}
+}
+
+func TestDeleteTask(t *testing.T) {
+	_, erro := handlers.DeleteTasks(1)
+	if erro != nil {
+		t.Errorf("%s", "erro delete task")
 	}
 }

@@ -23,7 +23,7 @@ var (
 			if len(args) > 1 {
 				log("Amount arguments no valid")
 			}
-			fmt.Printf("%v\n", handlers.CreateTask(args[0]))
+			CommandCreateTasks(args[0])
 		},
 	}
 

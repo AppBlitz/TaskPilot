@@ -222,16 +222,16 @@ func verificationState(state model.StatusTaks, taskVerification *model.Tasks) bo
 	return state == taskVerification.Status
 }
 
-func MarkDones(ID int) {
+func MarkDones(ID int) (erro error) {
 	var auxiliaryTask []*model.Tasks
 	var datas []*model.Tasks
 	data, erro := ReturnDataFile()
 	if erro != nil {
-		panic(erro)
+		return erro
 	}
 	erro = json.Unmarshal(data, &auxiliaryTask)
 	if erro != nil {
-		panic(erro)
+		return erro
 	}
 	task := SearchTaksForID(auxiliaryTask, ID)
 	for _, value := range auxiliaryTask {
@@ -246,21 +246,22 @@ func MarkDones(ID int) {
 		}
 		erro = addData(orderTask(append(datas, task)))
 		if erro != nil {
-			panic(erro)
+			return erro
 		}
 	}
+	return nil
 }
 
-func MarkInProgress(ID int) {
+func MarkInProgress(ID int) (erro error) {
 	var auxiliaryTask []*model.Tasks
 	var datas []*model.Tasks
 	data, erro := ReturnDataFile()
 	if erro != nil {
-		panic("erro read file")
+		return erro
 	}
 	erro = json.Unmarshal(data, &datas)
 	if erro != nil {
-		panic(erro)
+		return erro
 	}
 
 	task := SearchTaksForID(datas, ID)
@@ -273,12 +274,13 @@ func MarkInProgress(ID int) {
 	task.Status = PROGRESSTASK
 	erro = deleteFile()
 	if erro != nil {
-		panic(erro)
+		return erro
 	}
 	erro = addData(orderTask(append(auxiliaryTask, task)))
 	if erro != nil {
-		panic(erro)
+		return erro
 	}
+	return nil
 }
 
 func orderTask(tasks []*model.Tasks) []*model.Tasks {
