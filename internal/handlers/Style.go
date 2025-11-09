@@ -4,7 +4,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-func Styles(message string, argsColar []string) *lipgloss.Style {
+func Styles(message string, length int, argsColar []string) *lipgloss.Style {
 	Style := lipgloss.NewStyle().
 		SetString(message).
 		BorderStyle(lipgloss.InnerHalfBlockBorder()).
@@ -13,7 +13,8 @@ func Styles(message string, argsColar []string) *lipgloss.Style {
 		Foreground(lipgloss.Color(argsColar[1])).
 		Background(lipgloss.Color(argsColar[2])).
 		PaddingTop(1).
-		PaddingLeft(4).
-		Width(60)
+		PaddingLeft(1).
+		Width(70)
+
 	return &Style
 }

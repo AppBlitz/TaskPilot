@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"strconv"
 	"time"
@@ -211,7 +212,9 @@ func SearchForState(state string) []*model.Tasks {
 		panic("Error converter value")
 	}
 	for _, value := range auxilairyDatas {
-		if verificationState(model.StatusTaks(state), value) {
+		states := verificationState(model.StatusTaks(state), value)
+		fmt.Println(state)
+		if states {
 			auxilairyData = append(auxilairyData, value)
 		}
 	}
